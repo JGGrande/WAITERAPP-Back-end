@@ -5,12 +5,18 @@ import path from 'node:path';
 import { Server } from 'socket.io';
 
 import { router } from './router';
-
 const app = express();
+import { config } from 'dotenv';
 const server = http.createServer(app);
 export const io = new Server(server);
 
-mongoose.connect('mongodb://127.0.0.1:27017/waiter_app')
+// const MONGO_URL: string | undefined = process.env;
+
+config();
+
+const mongoDB: string = process.env.MONGODB_DEPLOY ?? 'mongodb://127.0.0.1:27017/waiter_app';
+
+mongoose.connect(mongoDB)
   .then(() => {
 
     io.on('connect', () => {
