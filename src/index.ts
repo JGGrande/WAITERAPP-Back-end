@@ -10,11 +10,13 @@ import { config } from 'dotenv';
 const server = http.createServer(app);
 export const io = new Server(server);
 
-// const MONGO_URL: string | undefined = process.env;
-
 config();
 
 const mongoDB: string = process.env.MONGODB_DEPLOY ?? 'mongodb://127.0.0.1:27017/waiter_app';
+const AccessControlAllowOrigin: string = process.env.ACCESS_CONTROL_ALLOW_ORIGIN ?? 'http://localhost:5173';
+const AccessControlAllowMethods: string = process.env.ACCESS_CONTROL_ALLOW_METHODS ?? 'http://localhost:5173';
+const AccessControlAllowHeaders: string = process.env.ACCESS_CONTROL_ALLOW_HEADERS ?? 'http://localhost:5173';
+
 
 mongoose.connect(mongoDB)
   .then(() => {
@@ -25,9 +27,9 @@ mongoose.connect(mongoDB)
 
     app.use((req, res, next) => {
       // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', '*');
-      res.setHeader('Access-Control-Allow-Headers', '*');
+      res.setHeader('Access-Control-Allow-Origin', AccessControlAllowOrigin);
+      res.setHeader('Access-Control-Allow-Methods', AccessControlAllowMethods);
+      res.setHeader('Access-Control-Allow-Headers', AccessControlAllowHeaders);
       next();
     });
     app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
